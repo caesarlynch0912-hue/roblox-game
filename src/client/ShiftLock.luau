@@ -8,26 +8,9 @@ local ShiftLock = {}
 
 local CAMERA_OFFSET = Vector3.new(1.75, 0, 0) -- over-the-shoulder, like the real one
 
-function ShiftLock.start(gui: ScreenGui)
+function ShiftLock.start()
 	local player = Players.LocalPlayer
 	local enabled = false
-
-	-- Small icon in the corner so you can tell when it's on
-	local icon = Instance.new("TextLabel")
-	icon.AnchorPoint = Vector2.new(1, 1)
-	icon.Position = UDim2.new(1, -20, 1, -20)
-	icon.Size = UDim2.fromOffset(130, 36)
-	icon.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-	icon.BackgroundTransparency = 0.3
-	icon.Font = Enum.Font.FredokaOne
-	icon.TextSize = 18
-	icon.TextColor3 = Color3.new(1, 1, 1)
-	icon.Text = "🔓 Shift Lock"
-	icon.Parent = gui
-
-	local corner = Instance.new("UICorner")
-	corner.CornerRadius = UDim.new(0, 8)
-	corner.Parent = icon
 
 	local function getHumanoid()
 		local character = player.Character
@@ -36,8 +19,6 @@ function ShiftLock.start(gui: ScreenGui)
 
 	local function setEnabled(on: boolean)
 		enabled = on
-		icon.Text = if on then "🔒 Shift Lock" else "🔓 Shift Lock"
-		icon.BackgroundColor3 = if on then Color3.fromRGB(60, 140, 220) else Color3.fromRGB(30, 30, 30)
 
 		local humanoid = getHumanoid()
 		if humanoid then

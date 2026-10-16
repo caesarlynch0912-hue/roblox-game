@@ -8,4 +8,4 @@ gui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
 
 require(script.CoinPopups).start(gui)
 require(script.ShopButton).start(gui)
-require(script.ShiftLock).start(gui)
+require(script.ShiftLock).start()
