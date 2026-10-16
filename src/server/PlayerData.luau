@@ -5,7 +5,14 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Config = require(ReplicatedStorage.Shared.Config)
 
-local store = DataStoreService:GetDataStore(Config.DataStoreName)
+-- GetDataStore errors in places that aren't published yet, so the game still runs without saving
+local storeOk, store = pcall(function()
+	return DataStoreService:GetDataStore(Config.DataStoreName)
+end)
+if not storeOk then
+	warn("Saving is off (publish the place and enable API access to turn it on): " .. tostring(store))
+	store = nil
+end
 
 local PlayerData = {}
 
@@ -26,6 +33,10 @@ local function onPlayerAdded(player: Player)
 	-- Attributes replicate to the client, so the shop UI can read this
 	player:SetAttribute("SpeedLevel", 0)
 
+	if not store then
+		return
+	end
+
 	-- DataStore calls can fail (and don't work in Studio unless API access is on), so wrap in pcall
 	local ok, saved = pcall(function()
 		return store:GetAsync(keyFor(player))
@@ -40,7 +51,7 @@ end
 
 local function save(player: Player)
 	local leaderstats = player:FindFirstChild("leaderstats")
-	if not leaderstats then
+	if not store or not leaderstats then
 		return
 	end
 
