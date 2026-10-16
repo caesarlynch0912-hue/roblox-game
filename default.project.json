@@ -16,6 +16,9 @@
     },
 
     "StarterPlayer": {
+      "$properties": {
+        "EnableMouseLockOption": true
+      },
       "StarterPlayerScripts": {
         "Client": {
           "$path": "src/client"

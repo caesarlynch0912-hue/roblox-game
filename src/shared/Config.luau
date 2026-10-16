@@ -3,8 +3,8 @@ local Config = {
 	DataStoreName = "PlayerData_v1",
 	StartingCoins = 0,
 
-	MaxCoins = 25, -- max coins in the world at once
-	CoinSpawnInterval = 2, -- seconds between spawns
+	MaxCoins = 80, -- max coins in the world at once
+	CoinSpawnInterval = 0.4, -- seconds between spawns
 	CoinSpawnRadius = 100, -- studs from the center of the map
 
 	-- Coin types. Weight = how often it spawns compared to the others.
