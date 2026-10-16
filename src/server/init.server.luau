@@ -8,6 +8,8 @@ coinCollected.Parent = ReplicatedStorage
 
 local PlayerData = require(script.PlayerData)
 local CoinSpawner = require(script.CoinSpawner)
+local Shop = require(script.Shop)
 
 PlayerData.start()
 CoinSpawner.start(PlayerData, coinCollected)
+Shop.start(PlayerData)

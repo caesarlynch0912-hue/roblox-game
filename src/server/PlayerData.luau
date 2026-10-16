@@ -1,4 +1,4 @@
--- Loads and saves each player's coins, and shows them on the leaderboard.
+-- Loads and saves each player's coins and upgrades, and shows coins on the leaderboard.
 local DataStoreService = game:GetService("DataStoreService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -23,12 +23,16 @@ local function onPlayerAdded(player: Player)
 	coins.Value = Config.StartingCoins
 	coins.Parent = leaderstats
 
+	-- Attributes replicate to the client, so the shop UI can read this
+	player:SetAttribute("SpeedLevel", 0)
+
 	-- DataStore calls can fail (and don't work in Studio unless API access is on), so wrap in pcall
 	local ok, saved = pcall(function()
 		return store:GetAsync(keyFor(player))
 	end)
 	if ok and saved then
 		coins.Value = saved.Coins or Config.StartingCoins
+		player:SetAttribute("SpeedLevel", saved.SpeedLevel or 0)
 	elseif not ok then
 		warn("Could not load data for " .. player.Name .. ": " .. tostring(saved))
 	end
@@ -41,11 +45,19 @@ local function save(player: Player)
 	end
 
 	local ok, err = pcall(function()
-		store:SetAsync(keyFor(player), { Coins = leaderstats.Coins.Value })
+		store:SetAsync(keyFor(player), {
+			Coins = leaderstats.Coins.Value,
+			SpeedLevel = player:GetAttribute("SpeedLevel") or 0,
+		})
 	end)
 	if not ok then
 		warn("Could not save data for " .. player.Name .. ": " .. tostring(err))
 	end
+end
+
+function PlayerData.getCoins(player: Player): number
+	local leaderstats = player:FindFirstChild("leaderstats")
+	return if leaderstats then leaderstats.Coins.Value else 0
 end
 
 function PlayerData.addCoins(player: Player, amount: number)
