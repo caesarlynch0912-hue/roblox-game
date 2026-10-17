@@ -20,7 +20,7 @@ The Studio tree is defined in `default.project.json`.
 
 ## Tools and commands
 
-Tools are pinned in `rokit.toml` (Rojo, StyLua, selene, Wally, Lune). Run `rokit install` after cloning.
+Tools are pinned in `rokit.toml` (Rojo, StyLua, selene, Wally, Lune, luau-lsp). Run `rokit install` after cloning.
 
 - `rojo serve` — live-sync into Studio (Plugins → Rojo → Connect)
 - `rojo build -o build.rbxlx` — build a place file to check the project compiles
@@ -38,51 +38,38 @@ Run `selene src` and `stylua --check src` before committing Luau changes.
 - Tabs for indentation; files are checked out with CRLF (`core.autocrlf=true`), which `stylua.toml` matches.
 - Short comments that explain why, written for a beginner reading the code.
 
-## Skills: when to use each one
+## Skill and MCP servers
 
-Project skills live in `.claude/skills/` (from EL4CTEO/roblox-skills). Load the matching skill **before** writing or reviewing code in that area. Several may apply at once — e.g. a new shop item uses `roblox-game-systems` + `roblox-networking` + `roblox-security` + `roblox-ui`.
+### Skill: `roblox-dev-skill`
 
-### Use on almost every change
+The one Roblox skill is [MSayib/roblox-dev-skill](https://github.com/MSayib/roblox-dev-skill), installed per user in `~/.claude/skills/roblox-dev-skill` (not in this repo). Load it **before** writing, reviewing, or explaining any Luau or Roblox code, then read the reference that matches the area:
 
-| Skill | Use when |
+| Area in this game | Reference in the skill |
 |---|---|
-| `roblox-luau` | Writing, refactoring, or explaining any Luau in `src/`; fixing type errors; choosing `task.*` APIs |
-| `roblox-architecture` | Deciding where new code or assets go (server/client/shared), adding a new system or module, player/character lifecycle, CollectionService tags |
-| `roblox-code-review` | Reviewing a diff or file before commit, auditing the game, or asked "what's wrong with this code" |
+| Any Luau in `src/`, `--!strict`, type errors | `references/luau-fundamentals.md` |
+| Where code goes (server/client/shared), new systems, Rojo layout | `references/project-structure.md` |
+| `CoinCollected`, `BuySpeed`, or any new remote | `references/networking.md` + `references/security-hardening.md` |
+| Coin pickups, purchases, speed — anything reacting to client input | `references/security-hardening.md` |
+| `PlayerData.luau`, save schema, `DataStoreName`, leaderboards | `references/datastore-persistence.md` |
+| Shop button, coin popups, HUD | `references/ui-systems.md` |
+| Robux purchases (developer products, passes) | `references/monetization.md` |
+| Lag, too many coins, memory | `references/performance-optimization.md` |
+| Old patterns (`wait`, `spawn`, deprecated APIs) | `references/legacy-migration.md` |
+| Driving Studio through MCP | `references/mcp-integration.md` + `references/agent-safety.md` |
+| End-to-end feature or debugging walkthroughs | `references/worked-examples.md` |
 
-### Core to this game
+The skill must not update its own knowledge or download the API dump (`~/RobloxDocs`) without asking.
 
-| Skill | Use when |
+### MCP servers (`.mcp.json`)
+
+| Server | What it does |
 |---|---|
-| `roblox-game-systems` | Changing coins, currency, leaderstats, the speed shop, adding upgrades, rewards, pets, or rounds |
-| `roblox-data-stores` | Touching `PlayerData.luau`, saving or loading anything, changing the save schema or `DataStoreName`, leaderboards, data loss/throttling bugs |
-| `roblox-networking` | Adding or changing a RemoteEvent/RemoteFunction (`CoinCollected`, `BuySpeed`), syncing state to clients |
-| `roblox-security` | Any server handler that reacts to client input — coin pickups, purchases, speed — or checking for exploits |
-| `roblox-physics` | Coin pickup detection (`Touched`), raycasts, collision groups, moving or spinning parts, CFrame math |
-| `roblox-ui` | The shop button, coin popups, HUD, menus, or UI that breaks on mobile/console |
-| `roblox-characters-animation` | WalkSpeed/speed upgrades, Humanoid, respawn, animations, tweens, tools |
-| `roblox-input` | Shift lock (`ShiftLock.luau`), keybinds, mobile buttons, gamepad, camera |
-| `roblox-tooling` | Rojo, Rokit, Wally packages, StyLua, selene, luau-lsp, Lune, `default.project.json`, CI setup |
-
-### Use when the feature calls for it
-
-| Skill | Use when |
-|---|---|
-| `roblox-world-building` | Building the map, terrain, lighting, particles/effects for coins |
-| `roblox-audio` | Coin pickup sounds, music, sound effects |
-| `roblox-performance` | Lag, FPS drops, memory leaks, too many coins, before optimizing hot code |
-| `roblox-testing` | Adding tests (Lune for pure modules like `Config.speedCost`), a test runner, or verifying a gameplay change |
-| `roblox-monetization` | Robux purchases: developer products, game passes, ProcessReceipt |
-| `roblox-analytics-liveops` | Economy/funnel analytics, daily rewards, A/B tests, live events, badges |
-| `roblox-text-chat` | Chat commands or showing any player-written text to others |
-| `roblox-npc-ai` | Adding NPCs, enemies, pets that follow, pathfinding |
-| `roblox-teleport-matchmaking` | Multiple places, lobbies, teleports, reserved servers |
-| `roblox-open-cloud` | External tools, web APIs, Open Cloud, HttpService |
-| `roblox-studio-mcp` | Driving an open Studio session through the Studio MCP server (only if it is set up) |
+| `Roblox_Studio` | Roblox's built-in Studio MCP (`%LOCALAPPDATA%\Roblox\mcp.bat`). Needs Studio open with **Assistant → … → Manage MCP Servers → Enable Studio as MCP server**. It edits the open place with no undo: confirm which place is open before writing, and prefer editing files in `src/` and syncing with Rojo over editing scripts in Studio. |
+| `roblox-docs` | API reference lookups (`uvx mcp-roblox-docs`, run with `mcp<2` because 3.3.1 breaks on mcp 2.x). Check classes, members, enums, and deprecations here before relying on memory. |
 
 ## Ask first — never do these unprompted
 
-Some skills include setup examples that must not be run automatically:
+The skill and MCP docs include setup examples that must not be run automatically:
 
 - Do not publish the place or add CI that publishes (`versionType=Published`, Open Cloud place upload).
 - Do not run `curl … | bash` / `iwr … | iex` installers — tools come from `rokit.toml`.

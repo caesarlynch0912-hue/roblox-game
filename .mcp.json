@@ -1,0 +1,12 @@
+{
+	"mcpServers": {
+		"Roblox_Studio": {
+			"command": "cmd",
+			"args": ["/c", "${LOCALAPPDATA}\\Roblox\\mcp.bat"]
+		},
+		"roblox-docs": {
+			"command": "uvx",
+			"args": ["--with", "mcp<2", "mcp-roblox-docs"]
+		}
+	}
+}

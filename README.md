@@ -30,11 +30,11 @@ Other files in the repo:
 | File | What it's for |
 |---|---|
 | `default.project.json` | Tells Rojo how the files map into Studio |
-| `rokit.toml` | Pins the tool versions (Rojo, StyLua, selene, Wally, Lune) |
+| `rokit.toml` | Pins the tool versions (Rojo, StyLua, selene, Wally, Lune, luau-lsp) |
 | `selene.toml` | Linter settings |
 | `stylua.toml` | Formatter settings |
-| `CLAUDE.md` | Project guide for Claude Code, including which skill to use when |
-| `.claude/skills/` | Roblox skills for Claude Code, from [EL4CTEO/roblox-skills](https://github.com/EL4CTEO/roblox-skills) |
+| `CLAUDE.md` | Project guide for Claude Code, including the Roblox skill and MCP servers it uses |
+| `.mcp.json` | MCP servers for Claude Code: Roblox Studio MCP and Roblox API docs |
 
 ## Setup (once)
 1. Install [Rokit](https://github.com/rojo-rbx/rokit)
